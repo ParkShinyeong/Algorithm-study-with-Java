@@ -6,29 +6,23 @@ import java.util.Scanner;
 public class Main11 {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in); 
-        String str = scan.next(); 
-        char tmp = str.charAt(0); 
-        int count = 0; 
+        String str = scan.next() + " "; 
+        int count = 1; 
         String answer = ""; 
 
-        for(int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i); 
-            if(tmp == c) {
+        for(int i = 0; i < str.length() - 1; i++) {
+            char prev = str.charAt(i); 
+            char tmp = str.charAt(i + 1); 
+            if(prev == tmp) {
+                // 중복될 때 
                 count++; 
             } else {
-                if(count > 1) {
-                    answer += tmp; 
+                // 중복되지 않을 때 
+                answer += prev; 
+                if(count > 1) { // count가 1 이상이면 개수를 추가한다. 
                     answer += count;  
-                } else {
-                    answer += tmp; 
                 }
-                tmp = c; 
                 count = 1; 
-            }
-
-            if(i == str.length() - 1) {
-                answer += tmp; 
-                if(count > 1) answer += count; 
             }
         }
 
