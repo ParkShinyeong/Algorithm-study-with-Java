@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main2309",
+            "request": "launch",
+            "mainClass": "Main2309",
+            "projectName": "Algorithm-study-with-Java_4cc000d8"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "Algorithm-study-with-Java_4cc000d8"
+        },
+        {
+            "type": "java",
+            "name": "Solution",
+            "request": "launch",
+            "mainClass": "Solution",
+            "projectName": "Algorithm-study-with-Java_4cc000d8"
+        },
+        {
+            "type": "java",
             "name": "Mid02",
             "request": "launch",
             "mainClass": "Mid02",
