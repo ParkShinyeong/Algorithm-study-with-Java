@@ -8,14 +8,10 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine()); 
         st = new StringTokenizer(br.readLine()); 
-        HashMap<String, ArrayList<String>> ancestor = new HashMap<>(); 
-        HashMap<String, ArrayList<String>> child = new HashMap<>(); 
-
+        HashMap<String, ArrayList<String>> graph = new HashMap<>(); 
 
         for(int i = 0; i < N; i++) {
-        	String str = st.nextToken(); 
-            ancestor.put(str, new ArrayList<>()); 
-            child.put(str, new ArrayList<>()); 
+        	graph.put(st.nextToken(), new ArrayList<>()); 
         }
 
         int M = Integer.parseInt(br.readLine()); 
@@ -23,26 +19,30 @@ public class Main {
             st = new StringTokenizer(br.readLine()); 
             String c = st.nextToken(); 
             String a = st.nextToken(); 
-            ancestor.get(c).add(a); 
+            graph.get(a).add(c); 
         }
-        HashMap<String, ArrayList<String>> childs = getChild(N, ancestor, child); 
-        getAnswer(childs);
+        HashMap<String, ArrayList<String>> childs = getChild(N, graph); 
+        getAnswer(graph, childs);
     }
-    static void getAnswer(HashMap<String, ArrayList<String>> child) throws IOException {
-        HashMap<String, Integer> childIndegrees = getIndegree(child);
+    
+    static void getAnswer(HashMap<String, ArrayList<String>> graph, HashMap<String, ArrayList<String>> child) throws IOException {
+        HashMap<String, Integer> indegrees = getIndegree(graph);
         int cnt = 0; 
         StringBuilder sb = new StringBuilder(); 
-        for(String key: childIndegrees.keySet()) {
-            int value = childIndegrees.get(key); 
+        for(String key: indegrees.keySet()) {
+            int value = indegrees.get(key); 
             if(value == 0)  {
                 sb.append(key).append(" "); 
                 cnt++; 
             }
         }
         String firstAncestor = sb.append("\n").toString(); 
+
         bw.write(cnt + "\n"); 
         bw.write(firstAncestor); 
+
         ArrayList<String> arr = new ArrayList<>(); 
+        
         for(String key: child.keySet()) {
             sb = new StringBuilder(); 
             sb.append(key).append(" ") 
@@ -64,25 +64,31 @@ public class Main {
         br.close();
     }
 
-    static HashMap<String, ArrayList<String>> getChild(int N, HashMap<String, ArrayList<String>> ancestor, HashMap<String, ArrayList<String>> child) {
-        HashMap<String, Integer> indegrees = getIndegree(ancestor); 
-        Queue<String> q = new ArrayDeque<>(); 
-        for(String key: indegrees.keySet()) {
-            if(indegrees.get(key) == 0) q.offer(key); 
-        }
-        while(!q.isEmpty()) {
-            String tmp = q.poll(); 
-            for(String ances: ancestor.get(tmp)) {
-                indegrees.put(ances, indegrees.get(ances) - 1); 
-                if(indegrees.get(ances) == 0 || ancestor.get(tmp).size() == 1) {
-                    // 부모인 경우 
-                    child.get(ances).add(tmp); 
-                } 
-                if(indegrees.get(ances) == 0) q.offer(ances); 
-            }
-        }
-        return child; 
+
+    static HashMap<String, ArrayList<String>> getChild(int N, HashMap<String, ArrayList<String>> graph) {
+    	HashMap<String, ArrayList<String>> childrens = new HashMap<String, ArrayList<String>>();
+    	for(String key: graph.keySet()) {
+    		childrens.put(key, new ArrayList<String>()); 
+    	}
+    	HashMap<String, Integer> indegrees = getIndegree(graph); 
+    	Queue<String> q = new ArrayDeque<>(); 
+    	for(String key: indegrees.keySet()) {
+    		if(indegrees.get(key) == 0) q.offer(key); 
+    	}
+    	
+    	while(!q.isEmpty()) {
+    		String tmp = q.poll(); 
+    		for(String child: graph.get(tmp)) {
+    			indegrees.put(child, indegrees.get(child) - 1); 
+    			if(indegrees.get(child) == 0) { 
+    				q.offer(child);
+    				childrens.get(tmp).add(child);  
+    			}
+    		}
+    	}
+    	return childrens; 
     }
+
     static HashMap<String, Integer> getIndegree(HashMap<String, ArrayList<String>> graph) {
         HashMap<String, Integer> indegrees = new HashMap<>(); 
         for(String key: graph.keySet()) {
