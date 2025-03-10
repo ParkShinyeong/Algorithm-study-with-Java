@@ -52,9 +52,9 @@ public class Main {
         		tree.get(parent).setRightChild(tree.get(c2));
         	}
         }
-        searchFirst(tree, tree.get('A')); 
-        searchMiddle(tree, tree.get('A')); 
-        searchLast(tree, tree.get('A')); 
+        searchFirst(tree.get('A')); 
+        searchMiddle(tree.get('A')); 
+        searchLast(tree.get('A')); 
         bw.write(sb1.append("\n").toString());
         bw.write(sb2.append("\n").toString());
         bw.write(sb3.append("\n").toString());
@@ -65,28 +65,28 @@ public class Main {
     
     // 전위 순회 
     static StringBuilder sb1 = new StringBuilder(); 
-    static void searchFirst(HashMap<Character, Node> tree, Node node) {
+    static void searchFirst(Node node) {
     	if(node == null) return; 
     	sb1.append(node.data); 
-    	searchFirst(tree, tree.get(node.data).leftChild); 
-    	searchFirst(tree, tree.get(node.data).rightChild); 
+    	searchFirst(node.leftChild); 
+    	searchFirst(node.rightChild); 
     }
     
     // 중위 순회 
     static StringBuilder sb2 = new StringBuilder(); 
-    static void searchMiddle(HashMap<Character, Node> tree, Node node) {
+    static void searchMiddle(Node node) {
     	if(node == null) return; 
-    	searchMiddle(tree, tree.get(node.data).leftChild); 
+    	searchMiddle(node.leftChild); 
     	sb2.append(node.data);  
-    	searchMiddle(tree, tree.get(node.data).rightChild); 
+    	searchMiddle(node.rightChild); 
     }
     
     // 후위 순회 
     static StringBuilder sb3 = new StringBuilder(); 
-    static void searchLast(HashMap<Character, Node> tree, Node node) {
+    static void searchLast(Node node) {
     	if(node == null) return; 
-    	searchLast(tree, tree.get(node.data).leftChild); 
-    	searchLast(tree, tree.get(node.data).rightChild); 
+    	searchLast(node.leftChild); 
+    	searchLast(node.rightChild); 
     	sb3.append(node.data);  
     }
 }
