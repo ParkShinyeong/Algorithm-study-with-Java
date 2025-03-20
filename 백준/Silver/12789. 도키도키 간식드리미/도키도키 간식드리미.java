@@ -38,10 +38,6 @@ public class Main {
 				st.add(first); 					
 			}
 		}
-		while(!st.isEmpty() && st.peek() == arr[priority]) {
-			st.pop(); 
-			priority++; 
-		}
 		if(priority == N) return true; 
 		else return false; 
 	}
