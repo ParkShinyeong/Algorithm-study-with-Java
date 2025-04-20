@@ -1,50 +1,38 @@
 import java.io.*;
-import java.util.*;
+import java.util.BitSet;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); 
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out)); 
-		int N = Integer.parseInt(br.readLine()); 
-		int M = Integer.parseInt(br.readLine()); 
-		String str = br.readLine(); 
-		String p = makePn(N);
-		int answer = solution(N, M, str, p); 
-		bw.write(answer + "");
-		bw.flush(); 
-		bw.close(); 
-		br.close(); 
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out)); 
+        
+        int N = Integer.parseInt(br.readLine()); 
+        int M = Integer.parseInt(br.readLine()); 
+        String str = br.readLine(); 
+        
+        bw.write(solution(N, M, str) + "");
+        bw.flush();
+        bw.close();
+        br.close();
 	}
 	
-	static int solution(int n, int m, String str, String p) {
+	static int solution(int N, int M, String str) {
+		int lt = 1; 
+		int pattern = 0; 
 		int cnt = 0; 
-		
-		StringBuilder sb = new StringBuilder(); 
-		for(int i = 0; i < n*2; i++) {
-			sb.append(str.charAt(i)); 
-		}
-		
-		for(int rt = n*2; rt < m; rt++) {
-			sb.append(str.charAt(rt)); 
-			if(sb.toString().equals(p)) {
-				cnt++; 
-			}
-			sb.deleteCharAt(0); 
-		}
-		
-		return cnt; 
-	}
-	
-	static String makePn(int n) {
-		StringBuilder sb = new StringBuilder(); 
-		for(int i = 0; i < (n*2 + 1); i++) {
-			if(i % 2 == 0) {
-				sb.append('I'); 
+		while(lt < M - 1) {
+			if(str.charAt(lt - 1) == 'I' && str.charAt(lt) == 'O' && str.charAt(lt + 1) == 'I') {
+				pattern++; 
+				if(pattern == N) {
+					cnt++; 
+					pattern--; 
+				}
+				lt += 2; 
 			} else {
-				sb.append('O'); 
+				lt += 1; 
+				pattern = 0; 
 			}
 		}
-		
-		return sb.toString(); 
+		return cnt; 
 	}
 }
