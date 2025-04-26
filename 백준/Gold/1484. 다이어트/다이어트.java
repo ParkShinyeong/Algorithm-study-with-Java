@@ -17,15 +17,19 @@ public class Main {
     }
 
     static List<Integer> solution(int N) throws IOException {
-        double tmp = 0;
         List<Integer> ans = new ArrayList<>();
-        for(double i = N; i > Math.sqrt(N); i--) {
-            if(N / i ==  Math.floor(N / i)) {
-                tmp = ((i + (N / i)) / 2);
-                if(tmp == Math.floor(tmp)) ans.add((int) tmp);
+        int x = 1;
+        int y = 2;
+        while(y > x) {
+            double calc = Math.pow(y, 2) - Math.pow(x, 2);
+            if(calc == N) {
+                ans.add(y);
+                x++;
             }
+            else if(calc < N) y++;
+            else x++;
         }
-        Collections.sort(ans);
+
         return ans;
     }
 }
