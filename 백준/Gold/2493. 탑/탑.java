@@ -19,8 +19,7 @@ public class Main {
 
     public static String solution(int n, int[] arr) {
         int[] ans = new int[n + 1]; 
-        Stack<int[]> st = new Stack<>(); 
-
+        ArrayDeque<int[]> st = new ArrayDeque<>(); 
         for(int i = 1; i <= n; i++) {
             int tower = 0; 
             while(!st.isEmpty()) {
