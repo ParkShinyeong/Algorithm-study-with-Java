@@ -6,20 +6,11 @@ class Solution {
         Arrays.sort(phone_book); 
         
         for(int i = 0; i < phone_book.length - 1; i++) {
-            String num1 = phone_book[i]; 
-            String num2 = phone_book[i + 1]; 
-            boolean flag = true; 
-            for(int j = 0; j < num1.length(); j++) {
-                if(num1.charAt(j) != num2.charAt(j)) {
-                    flag = false; 
-                    break; 
-                }
-            }
-            
-            if(flag) {
-                answer = false;
+            if(phone_book[i + 1].startsWith(phone_book[i])) {
+                answer = false; 
                 break; 
             }
+
         }
         return answer;
     }
