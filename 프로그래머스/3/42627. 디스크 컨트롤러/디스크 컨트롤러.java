@@ -19,24 +19,26 @@ class Solution {
             jobList.offer(new Job(i, jobs[i][0], jobs[i][1])); 
         }
         
+        // 가장 첫 작업을 넣어준다. 
         Job firstJob = jobList.poll(); 
         int time = firstJob.requestTime; 
         doJobList.offer(firstJob); 
         
-        // 요청 시간이 time인 작업은 doJobList로 이동시킨다. 
-        // doJobList에서 소요 시간이 짧은 작업부터 실행한다. 
-        // 작업 시작 시간 + 소요 시간 이후에 doJob은 fale가 된다. 
-        // false이면 새로운 작업을 시작한다. 
+        // 요청 시간이 time 이하인 작업은 doJobList로 이동시킨다. 
+        // doJobList에서 소요 시간이 짧은 작업부터 실행한다.
         while(true) {
             while(!jobList.isEmpty()) {
                 Job tmp = jobList.poll(); 
-                if(tmp.requestTime <= time) {
+                if(tmp.requestTime <= time) { 
+                    // 현재 시간 이전에 요청한 작업이 있는 경우
                     doJobList.offer(tmp); 
-                } else if(doJobList.isEmpty()) {
+                } else if(doJobList.isEmpty()) { 
+                    // 작업이 없다면 가장 최신 작업을 넣어준 뒤, 요청 시간만큼 옮겨준다. 
                     doJobList.offer(tmp); 
                     time = tmp.requestTime; 
                 }
                 else {
+                    // 
                     jobList.offer(tmp); 
                     break;
                 }
