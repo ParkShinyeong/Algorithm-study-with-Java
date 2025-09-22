@@ -9,18 +9,14 @@ class Solution {
             st = new StringTokenizer(operations[i]); 
             String operation = st.nextToken(); 
             int data = Integer.parseInt(st.nextToken()); 
-            // PriorityQueue<Integer> minQueue = new PriorityQueue<>(); 
-            // PriorityQueue<Integer> maxQueue = new PriorityQueue<>((a, b) -> b - a); 
-            // Map<Integer, Integer> isExisted = new HashMap<>(); 
             switch (operation.charAt(0)) {
                 case 'D':
-                    if(data == 1) { // 최댓값 삭제 
-                        if(list.size() > 0)
-                            list.remove(list.last()); 
+                    if(list.size() == 0) break; 
+                    if(data == 1) { 
+                        list.remove(list.last()); 
                         
-                    } else { // 최솟값 삭제 
-                        if(list.size() > 0) 
-                            list.remove(list.first()); 
+                    } else { 
+                        list.remove(list.first()); 
                     }
                     break; 
                 case 'I':
