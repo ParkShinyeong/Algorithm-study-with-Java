@@ -4,17 +4,11 @@ class Solution {
         int[] answer = new int[commands.length];
         for(int i = 0; i < commands.length; i++) {
             int[] command = commands[i]; 
-            int st = command[0]; 
-            int end = command[1]; 
-            int cnt = command[2]; 
+            int[] copyArr = new int[command[1] - command[0] + 1]; 
             
-            int[] arr = new int[end - st + 1]; 
-            for(int j = 0 ; j < end - st + 1; j++) {
-                arr[j] = array[j + st - 1]; 
-            }
-            
-            Arrays.sort(arr); 
-            answer[i] = arr[cnt - 1]; 
+            System.arraycopy(array, command[0] - 1, copyArr, 0, command[1] - command[0] + 1); 
+            Arrays.sort(copyArr); 
+            answer[i] = copyArr[command[2] - 1]; 
         }
         return answer;
     }
