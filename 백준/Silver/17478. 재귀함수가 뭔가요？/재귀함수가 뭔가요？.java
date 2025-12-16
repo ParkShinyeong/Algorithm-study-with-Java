@@ -1,8 +1,8 @@
 import java.io.*;
-
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out)); 
+    static int n; 
     static String[] output = {
             "\"재귀함수가 뭔가요?\"",
             "\"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어.",
@@ -15,38 +15,29 @@ public class Main {
         "라고 답변하였지."
     }; 
     public static void main(String[] args) throws IOException {
-        
-        int n = Integer.parseInt(br.readLine()); 
+        n = Integer.parseInt(br.readLine()); 
         bw.write("어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다.\n"); 
-        solution(n, 0); 
+        solution(0, ""); 
         bw.flush();
         bw.close();
         br.close();
     }
-
-    static void solution(int n, int cnt) throws IOException{
+    static void solution(int cnt, String under) throws IOException{
         if(cnt == n) {
             for(String str: output2) {
-                for(int i = 0; i < cnt; i++) {
-                    bw.write("____"); 
-                }
-                bw.write(str);  
+                bw.write(under); 
+                bw.write(str); 
                 bw.write("\n"); 
             }
             return; 
         }
         for(String str : output) {
-            for(int i = 0; i < cnt; i++) {
-                bw.write("____"); 
-            }
+            bw.write(under); 
             bw.write(str);
             bw.write("\n"); 
         }
-        solution(n, cnt + 1); 
-        for(int i = 0; i < cnt; i++) {
-                bw.write("____"); 
-        }
+        solution(cnt + 1, under + "____"); 
+        bw.write(under); 
         bw.write("라고 답변하였지.\n"); 
     }
 }
-
