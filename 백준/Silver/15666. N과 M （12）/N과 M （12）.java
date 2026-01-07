@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
     static int N, M; 
-    static TreeSet<Integer> set; 
     static int[] arr; 
     static StringBuilder sb = new StringBuilder(); 
     public static void main(String[] args) throws IOException {
@@ -15,12 +14,13 @@ public class Main {
         M = Integer.parseInt(st.nextToken()); 
 
         st = new StringTokenizer(br.readLine()); 
-        set = new TreeSet<>(); 
+        arr = new int[N]; 
 
         for(int i = 0; i < N; i++) {
-            set.add(Integer.parseInt(st.nextToken())); 
+            arr[i] = Integer.parseInt(st.nextToken()); 
         }
-        arr = set.stream().mapToInt(Integer::valueOf).toArray(); 
+
+        Arrays.sort(arr);
 
         recur(0, 0, new int[M]); 
 
@@ -39,8 +39,10 @@ public class Main {
             sb.append("\n"); 
             return; 
         }
-
+        int last = -1; // 같은 깊이에서 중복을 체크한다 
         for(int i = prevIdx; i < arr.length; i++) {
+            if(last == arr[i]) continue; 
+            last = arr[i]; 
             seq[cnt] = arr[i]; 
             recur(cnt + 1, i, seq); 
         }
