@@ -54,25 +54,20 @@ public class Main {
         Sticker tmpSticker = stickers[idx]; 
         for(int i = 0; i < N; i++) {
             for(int j = 0; j < M; j++) {
-                Queue<int[]> puttingPoitions = new ArrayDeque<>(); 
-                isSuccess = putSticker(i, j, laptop, idx, puttingPoitions); 
+                isSuccess = canPutSticker(i, j, laptop, idx); 
 
                 if(isSuccess) {
+                    putSticker(i, j, laptop, idx);
                     dfs(idx + 1, laptop); 
-                    while(!puttingPoitions.isEmpty()) {
-                        puttingPoitions.poll(); 
-                    }
                     return; 
-                } else { 
-                    removeSticker(laptop, puttingPoitions);
-                }
+                } 
             }
         }
 
         if(!isSuccess) {
             if(tmpSticker.rotateCnt == 4) { 
                 dfs(idx + 1, laptop);
-            } else {
+            } else { 
                 Sticker newSticker = rotateSticker90(tmpSticker); 
                 stickers[idx] = newSticker; 
                 dfs(idx, laptop); 
@@ -80,7 +75,7 @@ public class Main {
          }
     }
 
-    static boolean putSticker(int sx, int sy, int[][] laptop, int idx, Queue<int[]> puttingQueue) {
+    static boolean canPutSticker(int sx, int sy, int[][] laptop, int idx) {
         Sticker tmpSticker = stickers[idx]; 
 
         for(int i = 0; i < tmpSticker.n; i++) {
@@ -89,22 +84,25 @@ public class Main {
                 int nx = sx + i; 
                 int ny = sy + j; 
                 if(nx < 0 || ny < 0 || nx >= N || ny >= M || laptop[nx][ny] == 1) return false;  
-                laptop[nx][ny] = 1; 
-                puttingQueue.offer(new int[]{nx, ny}); 
             }
         }  
         return true; 
     }
 
-    static void removeSticker(int[][] laptop, Queue<int[]> puttingQueue) { 
-        while(!puttingQueue.isEmpty()) {
-            int[] tmp = puttingQueue.poll(); 
-            laptop[tmp[0]][tmp[1]] = 0;  
-        }
+    static void putSticker(int sx, int sy, int[][] laptop, int idx) {
+        Sticker tmpSticker = stickers[idx]; 
+
+        for(int i = 0; i < tmpSticker.n; i++) {
+            for(int j = 0; j < tmpSticker.m; j++) {
+                if(tmpSticker.sticker[i][j] == 0) continue; 
+                int nx = sx + i; 
+                int ny = sy + j; 
+                laptop[nx][ny] = 1; 
+            }
+        }  
     }
 
     static Sticker rotateSticker90(Sticker sticker) {
-        // 스티커를 90도로 돌리기 
         int[][] tmpSticker = sticker.sticker; 
         int[][] rotateSticker = new int[sticker.m][sticker.n]; 
 
