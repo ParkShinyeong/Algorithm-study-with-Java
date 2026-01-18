@@ -13,7 +13,7 @@ public class Main {
         
         StringTokenizer st = new StringTokenizer(br.readLine()); 
         N = Integer.parseInt(st.nextToken()); 
-        M = Integer.parseInt(st.nextToken()); 
+        M = Integer.parseInt(st.nextToken());  
 
         st = new StringTokenizer(br.readLine()); 
         int r = Integer.parseInt(st.nextToken()); 
@@ -41,34 +41,27 @@ public class Main {
             if(room[position.r][position.c] == 0) {
                 room[position.r][position.c] = -1; 
             }
-            boolean isMessy = isMessy(position); 
+
+            boolean isMessy = false; 
+            for(int i = 0; i < 4; i++) {
+                position.rotateDirectionCounterClockWise(); 
+                int nr = position.r + dirx[position.d]; 
+                int nc = position.c + diry[position.d]; 
+                if(nr < 0 || nc < 0 || nr >= N || nc >= M || room[nr][nc] == 1) continue; 
+                if(room[nr][nc] == 0) {
+                    position.setPosition(nr, nc);
+                    isMessy = true; 
+                    break; 
+                } 
+            }
+
             if(!isMessy) { 
                 int nr = position.r - dirx[position.d]; 
                 int nc = position.c - diry[position.d]; 
                 if(nr < 0 || nc < 0 || nr >= N || nc >= M || room[nr][nc] == 1) break; // 후진할 수 없다면 작동을 멈춘다. 
                 position.setPosition(nr, nc); 
-            } else {
-                for(int i = 0; i < 4; i++) {
-                    position.rotateDirectionCounterClockWise(); 
-                    int nr = position.r + dirx[position.d]; 
-                    int nc = position.c + diry[position.d]; 
-                    if(nr < 0 || nc < 0 || nr >= N || nc >= M || room[nr][nc] != 0) continue; 
-                    position.setPosition(nr, nc);
-                    break; 
-                }
             }
         }
-    }
-
-    static boolean isMessy(Position position) {
-        for(int i = 0; i < 4; i++) {
-            int nr = position.r + dirx[i]; 
-            int nc = position.c + diry[i];
-
-            if(nr < 0 || nc < 0 || nr >= N || nc >= M || room[nr][nc] != 0) continue;
-            if(room[nr][nc] == 0) return true; 
-        }
-        return false; 
     }
 
     static int countCleaning() {
@@ -78,6 +71,7 @@ public class Main {
                 if(room[i][j] == -1) cnt++; 
             }
         }
+
         return cnt; 
     }
 }
