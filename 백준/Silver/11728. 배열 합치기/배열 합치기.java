@@ -1,52 +1,51 @@
-import java.util.*;
-import java.lang.*;
 import java.io.*;
+import java.util.*;
 
-// The main method must be in a class named "Main".
-class Main {
+public class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); 
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out)); 
-        StringTokenizer st = new StringTokenizer(br.readLine(), " "); 
-        
+        StringTokenizer st = new StringTokenizer(br.readLine()); 
         int N = Integer.parseInt(st.nextToken()); 
-        int M = Integer.parseInt(st.nextToken()); 
-        int[] A = Arrays.stream(br.readLine().split(" "))
-            .mapToInt(Integer::parseInt)
-            // .sorted()
-            .toArray(); 
-        int[] B = Arrays.stream(br.readLine().split(" "))
-            .mapToInt(Integer::parseInt)
-            // .sorted()
-            .toArray();
-        br.close(); 
-        ArrayList<Integer> sortedArr = new ArrayList(); 
-
-        int ia = 0, ib = 0; 
-        while(ia < N && ib < M) {
-            if(A[ia] < B[ib]) {
-                sortedArr.add(A[ia]); 
-                ia++; 
-            } else {
-                sortedArr.add(B[ib]); 
-                ib++; 
-            } 
-        }
-
-        if(ia == N) {
-            for(int i = ib; i < M; i++) {
-                sortedArr.add(B[i]); 
-            }
-        } else if (ib == M) {
-            for(int i = ia; i < N; i++) {
-                sortedArr.add(A[i]); 
-            }
-        }
+        int M = Integer.parseInt(st.nextToken());
         
-        for(Integer num: sortedArr) {
-            bw.write(num + " "); 
+        int[] A = new int[N]; 
+        int[] B = new int[M]; 
+        
+        st = new StringTokenizer(br.readLine()); 
+        for(int i = 0; i < N; i++) {
+            A[i] = Integer.parseInt(st.nextToken()); 
+        }
+
+        st = new StringTokenizer(br.readLine()); 
+        for(int i = 0; i < M; i++) {
+            B[i] = Integer.parseInt(st.nextToken()); 
+        }
+       
+
+        int idxA = 0, idxB = 0, idx = 0; 
+        int[] answer = new int[N + M]; 
+
+        while(idxA < N && idxB < M) {
+            if(A[idxA] < B[idxB]) {
+                answer[idx++] = A[idxA++]; 
+            } else {
+                answer[idx++] = B[idxB++]; 
+            }
+        }
+
+        while(idxA < N) {
+            answer[idx++] = A[idxA++]; 
+        }
+        while(idxB < M) {
+            answer[idx++] = B[idxB++]; 
+        }
+
+        for(int i = 0; i < N + M; i++) {
+            bw.write(answer[i] + " "); 
         }
         bw.flush(); 
         bw.close(); 
+        br.close(); 
     }
 }
