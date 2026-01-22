@@ -23,24 +23,18 @@ public class Main {
             }
         }
 
-        rotateBoard(0); 
+        stackBoard(0, new int[N][N][N], new boolean[N]);
         if(min == Integer.MAX_VALUE) min = -1; 
         bw.write(String.valueOf(min)); 
-
-   
         bw.flush(); 
         bw.close(); 
         br.close(); 
     }
 
     static void stackBoard(int count, int[][][] stackMaze, boolean[] isVisit) {
+        if(min == 12) return; 
         if(count == 5) {
-            if(stackMaze[0][0][0] == 0 || stackMaze[N - 1][N - 1][N - 1] == 0) return;  
-            int cnt = findExit(stackMaze); 
-            if(cnt >= 0) {
-                if(min != -1) min = Math.min(cnt, min); 
-                else min = cnt; 
-            } 
+            rotateBoard(stackMaze, 0); 
             return; 
         }
 
@@ -53,19 +47,24 @@ public class Main {
         }
     }
 
-    static void rotateBoard(int idx) { 
+    static void rotateBoard(int[][][] maze, int idx) { 
+        if(min == 12) return; 
         if(idx == 5) {
-            stackBoard(0, new int[N][N][N], new boolean[N]);
+             if(maze[0][0][0] == 0 || maze[N - 1][N - 1][N - 1] == 0) return;  
+            int cnt = findExit(maze); 
+            if(cnt >= 0) {
+                if(min != -1) min = Math.min(cnt, min); 
+                else min = cnt; 
+            } 
             return; 
         }
 
         for(int i = 0; i < 4; i++) {
-            rotateClockWise(idx); 
-            rotateBoard(idx + 1); 
+            rotateClockWise(maze, idx); 
+            rotateBoard(maze, idx + 1); 
         }
     }
-
-    static void rotateClockWise(int idx) {
+    static void rotateClockWise(int[][][] maze, int idx) {
         int[][] board = maze[idx]; 
         int[][] rotateBoard = new int[N][N]; 
         for(int i = 0; i < N; i++) {
@@ -101,7 +100,6 @@ public class Main {
                 queue.offer(new Position(nx, ny, nz, tmp.movingCnt + 1)); 
             }
         }
-
         return -1; 
     }
 }
