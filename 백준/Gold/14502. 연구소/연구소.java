@@ -23,6 +23,7 @@ public class Main {
                 if(input == 2) virusPosition.add(new int[]{i, j}); 
             }
         }
+        
 
         dfs(0); 
         bw.write(String.valueOf(answer)); 
@@ -33,26 +34,29 @@ public class Main {
 
     static void dfs(int count) {
         if(count == 3) {
-            int safeCnt = spreadVirus(); 
+            spreadVirus();
+            int safeCnt = checkSafeArea(); 
+            rollback();  
+            
             answer = Math.max(answer, safeCnt); 
             return; 
         }
 
-        for(int i = 0; i < N; i++) {
-            for(int j = 0; j < M; j++) {
-                if(board[i][j] > 0) continue; 
-                board[i][j] = 1; 
-                dfs(count + 1); 
-                board[i][j] = 0; 
-            }
+        for(int i = 0; i < N * M; i++) {
+            int x = i / M; 
+            int y = i % M; 
+
+            if(board[x][y] > 0) continue; 
+            board[x][y] = 1; 
+            dfs(count + 1); 
+            board[x][y] = 0; 
         }
     }
 
-    static int spreadVirus() {
+    static void spreadVirus() {
         int[] dirx = {0, 0, 1, -1}; 
         int[] diry = {1, -1, 0, 0}; 
         Queue<int[]> viruses = new ArrayDeque<>(); 
-        ArrayList<int[]> spreadList = new ArrayList<>(); 
 
         for(int[] pos : virusPosition) {
             viruses.offer(pos); 
@@ -65,20 +69,10 @@ public class Main {
                 int ny = tmp[1] + diry[d]; 
 
                 if(nx < 0 || ny < 0 || nx >= N || ny >= M || board[nx][ny] > 0) continue; 
-                int[] nxt = new int[] {nx, ny}; 
-                spreadList.add(nxt);
-                viruses.offer(nxt); 
+                viruses.offer(new int[] {nx, ny}); 
                 board[nx][ny] = 2;  
             }
         }
-
-        int safeCnt = checkSafeArea(); 
-
-        for(int[] pos: spreadList) {
-            board[pos[0]][pos[1]] = 0; 
-        }
-
-        return safeCnt; 
     }
 
     static int checkSafeArea() {
@@ -90,5 +84,17 @@ public class Main {
             }
         }
         return cnt; 
+    }
+
+    static void rollback() {
+         for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                if(board[i][j] == 2) board[i][j] = 0; 
+            }
+        }
+
+        for(int[] virus: virusPosition) {
+            board[virus[0]][virus[1]] = 2; 
+        }
     }
 }
