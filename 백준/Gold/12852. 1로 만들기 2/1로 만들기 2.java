@@ -8,47 +8,34 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine()); 
 
-        int[][] dp = new int[N + 1][3]; 
-        for(int i = 2; i <= N; i++) {
-            Arrays.fill(dp[i], Integer.MAX_VALUE); 
-        }
+        int[] dp = new int[N + 1]; 
+        int[] path = new int[N + 1]; 
+        Arrays.fill(dp, Integer.MAX_VALUE); 
+        dp[0] = dp[1] = 0; 
 
-        if(N >= 2) {
-            dp[2][1] = dp[2][0] = 1; 
-        }
-        if(N >= 3) {
-            dp[3][2] = 1; dp[3][0] = 2; 
-    
-            for(int i = 4; i <= N; i++) {
-                dp[i][0] = Math.min(Math.min(dp[i-1][0], dp[i-1][1]), dp[i-1][2]) + 1; 
-                if(i % 2 == 0) dp[i][1] = Math.min(Math.min(dp[i / 2][0], dp[i / 2][1]), dp[i / 2][2]) + 1; 
-                if(i % 3 == 0) dp[i][2] = Math.min(Math.min(dp[i / 3][0], dp[i / 3][1]), dp[i / 3][2]) + 1; 
+        for(int i = 2; i <= N; i++) {
+            if(i % 3 == 0 && dp[i / 3] + 1 < dp[i]) {
+                dp[i] = dp[i / 3] + 1; 
+                path[i] = i / 3; 
+            } 
+            if(i % 2 == 0 && dp[i / 2] + 1 < dp[i]) {
+                dp[i] = dp[i / 2] + 1; 
+                path[i] = i / 2; 
+            }
+            if(dp[i - 1] + 1 < dp[i]) {
+                dp[i] = dp[i - 1] + 1; 
+                path[i] = i - 1; 
             }
         }
-        int min = Math.min(Math.min(dp[N][0], dp[N][1]), dp[N][2]); 
-        bw.write(min + "\n"); 
-        bw.write(printPath(N, dp));
+        bw.write(dp[N] + "\n"); 
+
+        int tmp = N; 
+        while(tmp != 0) {
+            bw.write(tmp + " "); 
+            tmp = path[tmp]; 
+        }
         bw.flush(); 
         bw.close(); 
         br.close(); 
-    }
-
-    static String printPath(int N, int[][] dp) {
-        StringBuilder sb = new StringBuilder(); 
-        int tmp = N; 
-        while(tmp != 0) {
-            sb.append(tmp).append(" "); 
-            
-            int min = Math.min(Math.min(dp[tmp][0], dp[tmp][1]), dp[tmp][2]); 
-            if(dp[tmp][0] == min) {
-                tmp -= 1; 
-            } else if (dp[tmp][1] == min) {
-                tmp /= 2; 
-            } else {
-                tmp /= 3; 
-            }
-        }
-
-        return sb.toString(); 
     }
 }
