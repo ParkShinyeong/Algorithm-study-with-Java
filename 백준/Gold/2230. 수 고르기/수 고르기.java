@@ -23,28 +23,18 @@ public class Main {
     }
 
     private static long solution() {
-        long min = Long.MAX_VALUE; 
         Arrays.sort(nums); 
-        for(int i = 0; i < N; i++) {
-            long target = nums[i];
-            min = Math.min(min, search(target, i));  
+        long min = Long.MAX_VALUE; 
+        int lt = 0, rt = 0; 
+
+        while(rt < N && lt <= rt) {
+            long sum = nums[rt] - nums[lt]; 
+            if(sum >= M) {
+                min = Math.min(min, sum); 
+                lt++; 
+            }
+            else rt++; 
         }
         return min;
-    }
-
-    private static long search(long target, int idx) {
-        int lt = idx + 1, rt = N - 1; 
-        long min = Long.MAX_VALUE; 
-        while(lt <= rt) {
-            int mid = (lt + rt) / 2; 
-            long sum = Math.abs(nums[mid] - target); 
-
-            if(sum >= M) {
-                min = sum; 
-                rt = mid - 1; 
-            }
-            else lt = mid + 1; 
-        }
-        return min; 
     }
 }
