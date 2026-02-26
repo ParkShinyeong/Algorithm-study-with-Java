@@ -19,7 +19,8 @@ public class Main {
         List<Map.Entry<String, Integer>> entryList = new ArrayList<>(waitingroom.entrySet()); 
         Collections.sort(entryList, (a, b) -> a.getValue().compareTo(b.getValue())); 
 
-        for(int i = 0; i < (entryList.size() > K ? K : entryList.size()); i++) {
+        int totalK = entryList.size() > K ? K : entryList.size();
+        for(int i = 0; i < totalK; i++) {
             bw.write(entryList.get(i).getKey() + "\n"); 
         }
 
