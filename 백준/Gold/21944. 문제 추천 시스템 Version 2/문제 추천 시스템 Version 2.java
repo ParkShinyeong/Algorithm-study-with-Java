@@ -25,6 +25,7 @@ public class Main {
         }
 
         M = Integer.parseInt(br.readLine()); 
+        StringBuilder answer = new StringBuilder(); 
         for(int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine()); 
             String command = st.nextToken(); 
@@ -38,25 +39,25 @@ public class Main {
                 case "recommend": 
                     sort = Integer.parseInt(st.nextToken()); 
                     int x = Integer.parseInt(st.nextToken()); 
-                    if(x == 1) bw.write(problemWithSort.get(sort).last().num + "\n"); 
-                    else bw.write(problemWithSort.get(sort).first().num + "\n"); 
+                    if(x == 1) answer.append(problemWithSort.get(sort).last().num).append("\n"); 
+                    else answer.append(problemWithSort.get(sort).first().num).append("\n"); 
                     break; 
                 case "recommend2": 
                     x = Integer.parseInt(st.nextToken()); 
-                    if(x == 1) bw.write(problems.last().num + "\n"); 
-                    else bw.write(problems.first().num + "\n"); 
+                    if(x == 1) answer.append(problems.last().num).append("\n"); 
+                    else answer.append(problems.first().num).append("\n"); 
                     break; 
                 case "recommend3" : 
                     x = Integer.parseInt(st.nextToken()); 
                     int L = Integer.parseInt(st.nextToken()); 
                     if(x == 1) {
                         Problem p = problems.ceiling(new Problem(0, L, 0)); 
-                        if(p == null) bw.write("-1" + "\n"); 
-                        else bw.write(p.num + "\n"); 
+                        if(p == null) answer.append("-1").append("\n"); 
+                        else answer.append(p.num).append("\n");  
                     } else {
                         Problem p = problems.floor(new Problem(0, L, 0)); 
-                        if(p == null) bw.write("-1" + "\n"); 
-                        else bw.write(p.num + "\n"); 
+                        if(p == null) answer.append("-1").append("\n");  
+                        else answer.append(p.num).append("\n");  
                     }
                     break; 
                 case "solved": 
@@ -68,6 +69,8 @@ public class Main {
                     break; 
             }
         }
+
+        bw.write(answer.toString()); 
         bw.flush(); 
         bw.close(); 
         br.close(); 
@@ -92,7 +95,8 @@ class Problem implements Comparable<Problem> {
 
     @Override
     public int compareTo(Problem o) {
-        if(this.lv == o.lv) return this.num - o.num; 
-        return this.lv - o.lv; 
+        if(this.lv != o.lv) return this.lv - o.lv; // 1순위 난이도
+        if(this.num != o.num) return this.num - o.num; // 2순위 문제 번호 
+        return this.sort - o.sort; // 3순위 알고리즘 분류 
     }
 }
