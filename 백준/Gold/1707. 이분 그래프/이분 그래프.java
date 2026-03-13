@@ -38,18 +38,17 @@ public class Main {
 
     private static boolean solution(int V, int E, ArrayList<ArrayList<Integer>> graph) {
         int[] checkCloseNode = new int[V + 1]; 
-        Queue<int[]> queue = new ArrayDeque<>(); 
+        Queue<Integer> queue = new ArrayDeque<>(); 
         int tmpGroup = 1; 
         
         for(int i = 1; i <= V; i++) {
             if(checkCloseNode[i] != 0) continue; 
-            queue.offer(new int[] {i, tmpGroup}); 
+            queue.offer(i); 
             checkCloseNode[i] = tmpGroup; 
             
             while(!queue.isEmpty()) {
-                int[] tmp = queue.poll(); 
-                int node = tmp[0]; 
-                int group = tmp[1]; 
+                int node = queue.poll(); 
+                int group = checkCloseNode[node]; 
                 
                 for(int nv : graph.get(node)) {
                     if(checkCloseNode[nv] == group) {
@@ -57,7 +56,7 @@ public class Main {
                     }
                     if(checkCloseNode[nv] != 0) continue; 
                     checkCloseNode[nv] = -group; 
-                    queue.offer(new int[]{nv, -group}); 
+                    queue.offer(nv); 
                 }
             }
         }
