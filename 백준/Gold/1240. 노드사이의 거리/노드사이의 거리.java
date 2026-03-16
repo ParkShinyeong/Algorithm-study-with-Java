@@ -3,8 +3,7 @@ import java.util.*;
 
 public class Main {
     static int N, M; 
-    static ArrayList<int[]>[] graph; 
-    static int[] parents, depths, lengths; 
+    static ArrayList<ConnectNode>[] graph; 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -23,66 +22,48 @@ public class Main {
             int p = Integer.parseInt(st.nextToken()); 
             int c = Integer.parseInt(st.nextToken()); 
             int len = Integer.parseInt(st.nextToken()); 
-            
-            graph[p].add(new int[] {c, len}); 
-            graph[c].add(new int[] {p, len}); 
+
+            graph[p].add(new ConnectNode(c, len)); 
+            graph[c].add(new ConnectNode(p, len)); 
         }
-        
-        makeTree(); 
 
         for(int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine()); 
             int n1 = Integer.parseInt(st.nextToken()); 
             int n2 = Integer.parseInt(st.nextToken()); 
-            int LCA = getLCA(n1, n2); 
-
-            int answer = lengths[n1] + lengths[n2] - 2 * lengths[LCA]; 
-
-            bw.write(answer + "\n"); 
+            bw.write(solution(n1, n2) + "\n"); 
         }
         bw.flush(); 
         bw.close(); 
         br.close(); 
     }
 
-   private static void makeTree() {
-        int root = 1; 
-        parents = new int[N + 1]; 
-        depths = new int[N + 1];
-        lengths = new int[N + 1]; 
-        
-        Queue<Integer> q = new ArrayDeque<>(); 
-        q.offer(root); 
-
+    private static int solution(int n1, int n2) {
+        Queue<Integer> queue = new ArrayDeque<>(); 
+        queue.offer(n1); 
         boolean[] isVisited = new boolean[N + 1]; 
-        isVisited[root] = true; 
-
-        while(!q.isEmpty()) {
-            int tmp = q.poll(); 
-
-            for(int[] nxtNode: graph[tmp]) {
-                int nxt = nxtNode[0]; 
-                if(isVisited[nxt]) continue; 
-                isVisited[nxt] = true; 
-                q.offer(nxt); 
-                parents[nxt] = tmp; 
-                depths[nxt] = depths[tmp] + 1; 
-                lengths[nxt] = lengths[tmp] + nxtNode[1]; 
+        int[] lengths = new int[N + 1]; 
+        while(!queue.isEmpty()) {
+            int tmp = queue.poll(); 
+            if(tmp == n2) break; 
+            
+            for(ConnectNode node: graph[tmp]) {
+                if(isVisited[node.nxt]) continue; 
+                isVisited[node.nxt] = true; 
+                lengths[node.nxt] = node.length + lengths[tmp]; 
+                queue.offer(node.nxt); 
             }
         }
-   }
 
-   private static int getLCA(int n1, int n2) {
-    // 깊이 맞추기 
-        while(depths[n1] > depths[n2]) n1 = parents[n1]; 
-        while(depths[n2] > depths[n1]) n2 = parents[n2]; 
+        return lengths[n2]; 
+    }
+}
 
-        // 최소 공통 조상 찾기 
-        while(n1 != n2) {
-            n1 = parents[n1]; 
-            n2 = parents[n2]; 
-        }
+class ConnectNode {
+    int nxt, length; 
+    ConnectNode(int nxt, int length) {
+        this.nxt = nxt; 
+        this.length = length; 
+    }
 
-        return n1; 
-   }
 }
