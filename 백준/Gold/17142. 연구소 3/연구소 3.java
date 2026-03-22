@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N, M, wallCnt, min; 
+    static int N, M, emptyCnt, min; 
     static int[][] board; 
     static ArrayList<Virus> viruses; 
     static int[] dirx = {0, 0, 1, -1}; 
@@ -23,15 +23,18 @@ public class Main {
             st = new StringTokenizer(br.readLine()); 
             for(int j = 0; j < N; j++) {
                 int input = Integer.parseInt(st.nextToken()); 
-                if(input == 1) wallCnt++; 
+                if(input == 0) emptyCnt++; 
                 else if (input == 2) viruses.add(new Virus(i, j)); 
                 board[i][j] = input; 
             }
         }
+        if(emptyCnt == 0) bw.write("0"); 
+        else {
+            activeVirus(0, 0, new int[M], viruses.size()); 
+            if(min == Integer.MAX_VALUE) bw.write("-1"); 
+            else bw.write(min + ""); 
+        }
 
-        activeVirus(0, 0, new int[M], viruses.size()); 
-        if(min == Integer.MAX_VALUE) bw.write("-1"); 
-        else bw.write(min + ""); 
         bw.flush(); 
         bw.close(); 
         br.close(); 
@@ -49,44 +52,37 @@ public class Main {
     }
 
     private static void bfs(int[] active) {
-        int[][] newBoard = new int[N][N]; 
+        int infectedCount = 0; 
+        boolean[][] visit = new boolean[N][N]; 
         Queue<Virus> q = new ArrayDeque<>(); 
         int time = 0; 
 
         for(int idx: active) {
             Virus activeVirus = viruses.get(idx); 
             q.offer(activeVirus); 
-            newBoard[activeVirus.x][activeVirus.y] = 1; 
+            visit[activeVirus.x][activeVirus.y] = true; 
         }
 
         while(!q.isEmpty()) {
-            Virus tmp = q.poll();
-            if(!(newBoard[tmp.x][tmp.y] != 1 && board[tmp.x][tmp.y] == 2)) time = Math.max(newBoard[tmp.x][tmp.y], time); 
-            for (int d = 0; d < 4; d++) {
-                int nx = tmp.x + dirx[d]; 
-                int ny = tmp.y + diry[d]; 
-
-                if(nx < 0 || ny < 0 || nx >= N || ny >= N || newBoard[nx][ny] > 0 || board[nx][ny] == 1) continue; 
-
-                newBoard[nx][ny] = newBoard[tmp.x][tmp.y] + 1; 
-                q.offer(new Virus(nx, ny)); 
+            if(infectedCount == emptyCnt) {
+                min = Math.min(time, min); 
+                return; 
             }
-        }
-        if(checkFillVirus(newBoard)) {
-            min = Math.min(time - 1, min); 
-        }; 
-    }
-
-    private static boolean checkFillVirus(int[][] newBoard) {
-        int cnt = 0; 
-        for(int i = 0; i < N; i++) {
-            for(int j = 0; j < N; j++) {
-                if(newBoard[i][j] > 0) cnt++; 
-                else if(board[i][j] == 2) cnt++; 
+            int size = q.size(); 
+            for(int i = 0; i < size; i++) {
+                Virus tmp = q.poll();
+                for (int d = 0; d < 4; d++) {
+                    int nx = tmp.x + dirx[d]; 
+                    int ny = tmp.y + diry[d]; 
+    
+                    if(nx < 0 || ny < 0 || nx >= N || ny >= N || visit[nx][ny] || board[nx][ny] == 1) continue; 
+                    if(board[nx][ny] == 0) infectedCount++;
+                    visit[nx][ny] = true; 
+                    q.offer(new Virus(nx, ny)); 
+                }
             }
+            time++; 
         }
-        if(N * N - wallCnt == cnt) return true; 
-        return false; 
     }
 }
 
