@@ -40,21 +40,15 @@ public class Main {
             if(indegrees[i] == 0) queue.offer(i); 
         }
 
-        int[] answer = new int[N]; 
-        int idx = 0; 
+        StringBuilder sb = new StringBuilder(); 
 
         while(!queue.isEmpty()) {
             int tmp = queue.poll(); 
-            answer[idx++] = tmp; 
+            sb.append(tmp).append(" "); 
             for(int nxt: graph[tmp]) {
                 indegrees[nxt]--; 
                 if(indegrees[nxt] == 0) queue.offer(nxt); 
             }
-        }
-
-        StringBuilder sb = new StringBuilder(); 
-        for(int n: answer) {
-            sb.append(n).append(" "); 
         }
 
         return sb.toString(); 
