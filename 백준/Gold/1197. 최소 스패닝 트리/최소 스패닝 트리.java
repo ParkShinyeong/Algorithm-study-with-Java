@@ -3,7 +3,8 @@ import java.util.*;
 
 public class Main {
     static int V, E; 
-    static ArrayList<Edge>[] graph; 
+    static PriorityQueue<Edge> edges; 
+    static int[] parents; 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -11,10 +12,9 @@ public class Main {
 
         V = Integer.parseInt(st.nextToken());  
         E = Integer.parseInt(st.nextToken());  
-        graph = new ArrayList[V + 1]; 
-        for(int i = 0; i <= V; i++) {
-            graph[i] = new ArrayList<>(); 
-        }
+        edges = new PriorityQueue<>(); 
+        parents = new int[V + 1]; 
+        Arrays.fill(parents, -1); 
 
         for(int i = 0; i < E; i++) {
             st = new StringTokenizer(br.readLine()); 
@@ -22,51 +22,46 @@ public class Main {
             int v2 = Integer.parseInt(st.nextToken());
             int w = Integer.parseInt(st.nextToken());
 
-            graph[v1].add(new Edge(v2, w));
-            graph[v2].add(new Edge(v1, w)); 
+            edges.offer(new Edge(v1, v2, w)); 
         }
-        bw.write(prim() + ""); 
+        bw.write(kruskal() + ""); 
         bw.flush();    
         bw.close(); 
         br.close(); 
     }
 
-    private static int prim() {
-        PriorityQueue<Edge> pq = new PriorityQueue<>(); 
-        
-        
-        int start = 1; 
-        boolean[] visit = new boolean[V + 1]; 
-        visit[start] = true;
-        for(Edge nxt: graph[start]) {
-            pq.offer(nxt); // 끝 정점, 가중치 순
-        }
-        
-        int edgeCnt = 0; 
-        int total = 0; 
-        
-        while(!pq.isEmpty()) {
-            Edge tmp = pq.poll(); 
-            
-            if(visit[tmp.target]) continue; 
-            total += tmp.cost; 
-            edgeCnt++; 
-
-            if(edgeCnt == V - 1) break; 
-
-            visit[tmp.target] = true; 
-            for(Edge nxt: graph[tmp.target]) {
-                pq.offer(nxt);
+    private static int kruskal() {
+        int totalCost = 0; 
+        while(!edges.isEmpty()) {
+            Edge edge = edges.poll(); 
+            if(union(edge.v1, edge.v2)) {
+                totalCost += edge.cost; 
             }
         }
-        return total; 
+        return totalCost; 
+    }
+
+    private static boolean union(int v1, int v2) {
+        int p1 = find(v1); 
+        int p2 = find(v2); 
+        if(p1 != p2) {
+            parents[p2] = p1;
+            return true; 
+        }
+        return false; // 이미 같은 집합임 
+    }
+
+    private static int find(int v) {
+        if(parents[v] < 0) return v; 
+        return parents[v] = find(parents[v]); 
     }
 }
 
 class Edge implements Comparable<Edge> {
-    int target, cost; 
-    Edge (int target, int cost) {
-        this.target = target; 
+    int v1, v2, cost; 
+    Edge (int v1, int v2, int cost) {
+        this.v1 = v1; 
+        this.v2 = v2; 
         this.cost = cost; 
     }
 
