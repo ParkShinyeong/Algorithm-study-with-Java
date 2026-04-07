@@ -16,33 +16,24 @@ public class Main {
     }
 
     private static String solution(String str, String bombStr) {
-        
-        Stack<Character> stack = new Stack<>(); 
+        StringBuilder answer = new StringBuilder(); 
         
         for(int i = 0; i < str.length(); i++) {
-            stack.add(str.charAt(i)); 
+            answer.append(str.charAt(i)); 
             int size = bombStr.length();
-            if(stack.size() < size) continue; 
+            if(answer.length() < size) continue; 
 
             boolean isSame = true; 
             for(int j = size - 1; j >= 0; j--) {
-                if(bombStr.charAt(j) != stack.get(j + stack.size() - size)) {
+                if(bombStr.charAt(j) != answer.charAt(j + answer.length() - size)) {
                     isSame = false; 
                     break; 
                 } 
             }
             if(!isSame) continue; 
-            
-            for(int j = 0; j < size; j++) {
-                stack.pop(); 
-            }
+            answer.delete(answer.length() - size, answer.length()); 
         }
 
-        if(stack.isEmpty()) return "FRULA";
-        StringBuilder answer = new StringBuilder(); 
-        for(int i = 0; i < stack.size(); i++) {
-            answer.append(stack.get(i)); 
-        }
-        return answer.toString(); 
+        return answer.length() == 0 ? "FRULA" : answer.toString(); 
     }
 }
