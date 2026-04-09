@@ -38,16 +38,15 @@ public class Main {
     }
 
     private static int solution(int n1, int n2) {
-        int[] startLen = dijkstra(1);
-        int[] transit = dijkstra(n1); 
-        int[] endLen = dijkstra(N); 
-        int len = transit[n2]; 
+        int[] startLen = dijkstra(n1);
+        int[] endLen = dijkstra(n2); 
+        int len = startLen[n2]; 
 
-        if(startLen[n1] == maxValue || endLen[n1] == maxValue 
-            || startLen[n2] == maxValue || endLen[n2] == maxValue || len == maxValue) return -1; 
+        if(startLen[1] == maxValue || endLen[1] == maxValue 
+            || startLen[N] == maxValue || endLen[N] == maxValue || len == maxValue) return -1; 
     
-        int dist1 = startLen[n1] + endLen[n2]; 
-        int dist2 = startLen[n2] + endLen[n1]; 
+        int dist1 = startLen[1] + endLen[N]; 
+        int dist2 = startLen[N] + endLen[1]; 
         return len + Math.min(dist1, dist2); 
     }
 
