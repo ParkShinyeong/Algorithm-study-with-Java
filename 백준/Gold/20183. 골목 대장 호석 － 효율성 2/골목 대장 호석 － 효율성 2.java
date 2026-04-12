@@ -41,19 +41,19 @@ public class Main {
     }
     private static int solution() {
         int lt = minCost, rt = maxCost; 
-        boolean flag = false; 
+        int answer = -1; 
         while(lt <= rt) {
             int mid = (lt + rt) / 2; 
             long result = dijkstra(mid); 
             if(result <= C) { 
                 rt = mid - 1; 
-                flag = true; 
+                answer = mid; 
             } else {
                 lt = mid + 1; 
             }
         }
 
-        return flag ? lt : -1; 
+        return answer;
     }
     private static long dijkstra(int upper) {
         long[] costs = new long[N + 1]; 
