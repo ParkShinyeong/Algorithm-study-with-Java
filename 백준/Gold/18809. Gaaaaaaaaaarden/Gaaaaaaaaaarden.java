@@ -87,6 +87,8 @@ public class Main {
             queue.offer(pos);
         }
 
+        int flower = 0; 
+
         while(!queue.isEmpty()) {
             tmpTime++; 
             int size = queue.size(); 
@@ -98,8 +100,10 @@ public class Main {
                 for(int d = 0; d < 4; d++) {
                     int nx = pos.x + dirx[d]; 
                     int ny = pos.y + diry[d]; 
-                    if(nx < 0 || ny < 0 || nx >= N || ny >= M || board[nx][ny] == 0 || land[nx][ny] == 2) continue; 
+                    if(nx < 0 || ny < 0 || nx >= N || ny >= M 
+                        || board[nx][ny] == 0 || land[nx][ny] == 2) continue; 
                     if(land[nx][ny] + tmpColor == 0 && time[nx][ny] == tmpTime){
+                        flower++; 
                         land[nx][ny] = 2; 
                         continue; 
                     }
@@ -108,13 +112,6 @@ public class Main {
                     time[nx][ny] = tmpTime; 
                     queue.offer(new Position(nx, ny)); 
                 }
-            }
-        }
-
-        int flower = 0; 
-        for(int i = 0; i < N; i++) {
-            for(int j = 0; j < M; j++) {
-                if(land[i][j] == 2) flower++; 
             }
         }
         return flower;
