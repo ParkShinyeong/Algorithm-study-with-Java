@@ -26,9 +26,14 @@ class FileName implements Comparable<FileName>{
     FileName(String name) {
         // head, num, tail로 구분해야 함. 
         full = name; 
-        head = tail = ""; 
-        String numstr = ""; 
+        head = tail = "";  
         
+        num = Integer.parseInt(seperateName(name)); 
+    }
+    
+    private String seperateName(String name) {
+        
+        String numstr = "";
         boolean isTail = false; 
         for(char c: name.toCharArray()) {
             int tmp = c - '0'; 
@@ -42,10 +47,10 @@ class FileName implements Comparable<FileName>{
                 } else head += c; 
             }
         }
-        
         tail = tail.toUpperCase(); 
         head = head.toUpperCase(); 
-        num = Integer.parseInt(numstr); 
+        
+        return numstr; 
     }
     
     @Override
