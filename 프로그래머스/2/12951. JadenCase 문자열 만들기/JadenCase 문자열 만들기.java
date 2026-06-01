@@ -4,19 +4,14 @@ class Solution {
     public String solution(String s) {
         StringBuilder answer = new StringBuilder();
         boolean isFirst = true; 
+        s = s.toLowerCase(); 
         
         for(char c: s.toCharArray()) {
-            if(c == ' ') {
-                isFirst = true;
-                answer.append(c); 
-            } else {
-                if(isFirst) {
-                    answer.append(Character.toUpperCase(c)); 
-                    isFirst = false; 
-                } else {
-                    answer.append(Character.toLowerCase(c)); 
-                }
-            }
+            
+            char tmp = isFirst ? Character.toUpperCase(c) : c; 
+            answer.append(tmp); 
+            isFirst = c == ' '; 
+      
         }
         
         return answer.toString();
